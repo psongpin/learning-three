@@ -10,11 +10,13 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@react-three/fiber": "^7.0.26",
     "@stitches/react": "^1.2.6",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "stitches-normalize-css": "^1.2.0"
+    "stitches-normalize-css": "^1.2.0",
+    "three": "^0.137.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.1",
