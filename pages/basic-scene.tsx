@@ -2,19 +2,22 @@ import { useRef } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Canvas, MeshProps, useFrame } from '@react-three/fiber'
-import { PerspectiveCamera } from '@react-three/drei'
-import { Mesh } from 'three'
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import * as THREE from 'three'
 
 type BoxProps = MeshProps & {
   color: string
 }
 
 const Box: React.FC<BoxProps> = ({ color, ...props }) => {
-  const meshRef = useRef<Mesh>()
+  const meshRef = useRef<THREE.Mesh>()
 
-  useFrame(({ clock }) => {
+  useFrame(({ camera, mouse }) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = clock.getElapsedTime()
+      // camera.position.x = Math.sin(mouse.x * Math.PI * 2) * 3
+      // camera.position.z = Math.cos(mouse.x * Math.PI * 2) * 3
+      // camera.position.y = mouse.y * 5
+      // camera.lookAt(meshRef.current.position)
     }
   })
 
@@ -37,7 +40,7 @@ const BasicScene: NextPage = () => {
       <div style={{ height: '100vh' }}>
         <Canvas>
           <PerspectiveCamera makeDefault fov={75} position={[0, 0, 3]} />
-
+          <OrbitControls enableDamping />
           <Box color="red" position={[0, 0, 0]} />
         </Canvas>
       </div>
