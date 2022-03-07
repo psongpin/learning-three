@@ -4,6 +4,7 @@ import Head from 'next/head'
 import { Canvas, MeshProps, useFrame } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
+import CanvasWrapper from 'components/CanvasWrapper'
 
 type BoxProps = MeshProps & {
   color: string
@@ -14,10 +15,10 @@ const Box: React.FC<BoxProps> = ({ color, ...props }) => {
 
   useFrame(({ camera, mouse }) => {
     if (meshRef.current) {
-      // camera.position.x = Math.sin(mouse.x * Math.PI * 2) * 3
-      // camera.position.z = Math.cos(mouse.x * Math.PI * 2) * 3
-      // camera.position.y = mouse.y * 5
-      // camera.lookAt(meshRef.current.position)
+      camera.position.x = Math.sin(mouse.x * Math.PI * 2) * 3
+      camera.position.z = Math.cos(mouse.x * Math.PI * 2) * 3
+      camera.position.y = mouse.y * 5
+      camera.lookAt(meshRef.current.position)
     }
   })
 
@@ -37,13 +38,15 @@ const BasicScene: NextPage = () => {
         <meta name="description" content="Basic Scene" />
       </Head>
 
-      <div style={{ height: '100vh' }}>
-        <Canvas>
-          <PerspectiveCamera makeDefault fov={75} position={[0, 0, 3]} />
-          <OrbitControls enableDamping />
-          <Box color="red" position={[0, 0, 0]} />
-        </Canvas>
-      </div>
+      <CanvasWrapper>
+        {typeof window !== 'undefined' ? (
+          <Canvas dpr={Math.min(window.devicePixelRatio, 2)}>
+            <PerspectiveCamera makeDefault fov={75} position={[0, 0, 3]} />
+            <OrbitControls enableDamping />
+            <Box color="red" position={[0, 0, 0]} />
+          </Canvas>
+        ) : null}
+      </CanvasWrapper>
     </>
   )
 }
