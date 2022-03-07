@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Canvas, MeshProps, useFrame } from '@react-three/fiber'
@@ -12,6 +12,29 @@ type BoxProps = MeshProps & {
 
 const Box: React.FC<BoxProps> = ({ color, ...props }) => {
   const meshRef = useRef<THREE.Mesh>()
+  const geometry = useRef<THREE.BufferGeometry>()
+
+  const count = 50
+  const arrayLength = count * 3 * 3
+  const positionsArray = useMemo(
+    () => new Float32Array(arrayLength),
+    [arrayLength]
+  )
+
+  for (let index = 0; index < arrayLength; index++) {
+    positionsArray[index] = Math.random() - 0.5
+  }
+
+  const positionAttribute = useMemo(
+    () => new THREE.BufferAttribute(positionsArray, 3),
+    [positionsArray]
+  )
+
+  useEffect(() => {
+    if (geometry.current) {
+      geometry.current.setAttribute('position', positionAttribute)
+    }
+  }, [positionAttribute])
 
   useFrame(({ camera, mouse }) => {
     if (meshRef.current) {
@@ -24,8 +47,8 @@ const Box: React.FC<BoxProps> = ({ color, ...props }) => {
 
   return (
     <mesh {...props} ref={meshRef}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color={color} />
+      <bufferGeometry ref={geometry} />
+      <meshBasicMaterial color={color} wireframe />
     </mesh>
   )
 }
